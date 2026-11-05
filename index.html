@@ -67,7 +67,10 @@ p{margin:0}
 /* Hero */
 .hero{padding:64px 0 56px}
 .hero .wrap{display:grid;grid-template-columns:1.25fr .85fr;gap:56px;align-items:center}
-.hero h1{font-size:clamp(3.6rem,9vw,6.4rem);letter-spacing:-.01em}
+.hero h1{font-size:clamp(3rem,6.2vw,4.9rem);letter-spacing:-.01em;white-space:nowrap}
+.idrow{display:flex;align-items:center;gap:24px}
+.portrait{width:112px;height:112px;border-radius:50%;object-fit:cover;flex:none;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--line),0 12px 28px -16px rgba(0,0,0,.45)}
+@media (max-width:520px){.idrow{flex-direction:column;align-items:flex-start;gap:14px}.portrait{width:92px;height:92px}}
 .thesis{font-family:var(--display);font-style:italic;font-size:clamp(1.5rem,3vw,2.1rem);color:var(--board);margin-top:6px}
 .lede{margin-top:22px;max-width:56ch;font-size:1.1rem}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;padding:0;list-style:none}
@@ -78,7 +81,7 @@ p{margin:0}
 .btn:hover{transform:translateY(-1px)}
 .btn[aria-disabled="true"]{opacity:.55;pointer-events:none;border-style:dashed}
 
-.boardbox{justify-self:end;width:100%;max-width:360px}
+.boardbox{justify-self:end;width:100%;max-width:360px;margin:0}
 .board{position:relative;display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:1px solid var(--line);border-radius:6px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(0,0,0,.35)}
 .sq{position:relative;background:var(--sq-light)}
 .sq.d{background:var(--sq-dark)}
@@ -202,8 +205,13 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <p class="eyebrow">University of Arizona · Eller College of Management</p>
-      <h1>Victor Dam</h1>
+      <div class="idrow">
+        <img class="portrait" src="photo.jpg" alt="Portrait of Victor Dam" width="112" height="112">
+        <div>
+          <p class="eyebrow">University of Arizona · Eller College of Management</p>
+          <h1>Victor Dam</h1>
+        </div>
+      </div>
       <p class="thesis">Observe first. Act second.</p>
       <p class="lede">I connect business problems with technical solutions. I'm studying Management Information Systems and Operations &amp; Supply Chain Management with a minor in Computer Science, and I'm seeking a full-time role in <strong>data analysis, data science or project management</strong> in <strong>tech and aerospace</strong>.</p>
       <ul class="facts">
