@@ -184,6 +184,35 @@ section.block{padding:72px 0;border-top:1px solid var(--line)}
 .mini:hover{border-color:var(--ink)}
 footer{padding:32px 0 48px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+/* Ask-about-Victor assistant */
+.quick{margin-top:16px;font-size:.92rem;color:var(--muted)}
+.quick button{font:inherit;color:var(--board);background:none;border:0;padding:0;cursor:pointer;border-bottom:1px solid currentColor}
+.ask-fab{position:fixed;right:20px;bottom:20px;z-index:40;display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:12px 18px 12px 14px;font:500 .95rem var(--body);cursor:pointer;box-shadow:0 14px 30px -12px rgba(0,0,0,.45)}
+.ask-fab .k{font-size:1.3rem;line-height:1}
+.ask-fab[aria-expanded="true"]{display:none}
+.ask{position:fixed;right:20px;bottom:20px;z-index:41;width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 100px));display:none;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px -20px rgba(0,0,0,.45);overflow:hidden}
+.ask.open{display:flex}
+.ask header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--board);color:var(--board-ink)}
+.ask header p{font-family:var(--display);font-size:1.25rem;line-height:1.1}
+.ask header small{display:block;font:400 .74rem var(--mono);opacity:.85;margin-top:2px}
+.ask .x{background:none;border:0;color:inherit;font-size:1.4rem;cursor:pointer;line-height:1;padding:4px 6px;border-radius:6px}
+.log{position:relative;flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:.93rem}
+.msg{max-width:88%;padding:10px 13px;border-radius:12px;line-height:1.5}
+.msg.bot{background:var(--paper);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.me{background:var(--ink);color:var(--paper);align-self:flex-end;border-bottom-right-radius:4px}
+.msg a{color:var(--board);font-weight:500}
+.msg p+p{margin-top:8px}
+.msg h4{font-family:var(--display);font-weight:400;font-size:1.15rem;margin:0 0 6px}
+.msg.typing{color:var(--muted);font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 10px}
+.chips button{font:500 .8rem var(--body);background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer}
+.chips button:hover{border-color:var(--board);color:var(--board)}
+.ask form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.ask input{flex:1;min-width:0;font:inherit;font-size:.93rem;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.ask form button{font:500 .9rem var(--body);background:var(--ink);color:var(--paper);border:0;border-radius:8px;padding:0 14px;cursor:pointer}
+.ask .fine{font-size:.7rem;color:var(--muted);text-align:center;padding:0 12px 10px}
+@media (max-width:520px){.ask{right:8px;left:8px;bottom:8px;width:auto;height:min(78vh,600px)}.ask-fab{right:14px;bottom:14px}}
 </style>
 </head>
 <body>
@@ -226,6 +255,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
         <a class="btn" href="#resume">Read my resume</a>
         <a class="btn" href="#contact">Get in touch</a>
       </div>
+      <p class="quick">Short on time? <button type="button" data-open-summary>Read my 60-second summary</button></p>
     </div>
     <figure class="boardbox" aria-label="Chessboard showing a knight's path of five numbered moves, representing how Victor works: observe, listen, analyze, decide, act.">
       <div class="board anim" id="board"></div>
@@ -516,6 +546,22 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
   </div>
 </footer>
 
+
+<button class="ask-fab" id="askFab" type="button" aria-expanded="false" aria-controls="askPanel"><span class="k" aria-hidden="true">&#9822;</span>Ask about Victor</button>
+<section class="ask" id="askPanel" role="dialog" aria-modal="false" aria-labelledby="askTitle">
+  <header>
+    <div><p id="askTitle">Ask about Victor Dam</p><small>Instant answers from his resume and story</small></div>
+    <button class="x" id="askClose" type="button" aria-label="Close chat">&times;</button>
+  </header>
+  <div class="log" id="askLog" aria-live="polite"></div>
+  <div class="chips" id="askChips"></div>
+  <form id="askForm" autocomplete="off">
+    <label for="askInput" class="sr" style="position:absolute;left:-9999px">Your question</label>
+    <input id="askInput" type="text" placeholder="Ask a question, e.g. What are his skills?" maxlength="200">
+    <button type="submit">Send</button>
+  </form>
+  <p class="fine">Prepared answers, not a live AI. For anything else, email Victor.</p>
+</section>
 <script>
 /* ===== Edit these links when they are ready ===== */
 const CONFIG = {
@@ -599,6 +645,94 @@ document.getElementById("copyEmail").addEventListener("click", async (e) => {
   }
   setTimeout(() => { btn.textContent = "Copy email"; }, 2200);
 });
+
+/* ===== Ask-about-Victor assistant (prepared answers, no server) ===== */
+(function(){
+  const EMAIL = "vich5847@gmail.com";
+  const LINKEDIN = "https://www.linkedin.com/in/victor-danh-dam-a995b7292";
+  const A = {
+    summary: `<h4>Victor Dam in 60 seconds</h4>
+<p><b>Who:</b> MIS and Operations &amp; Supply Chain Management student at the University of Arizona's Eller College of Management, minor in Computer Science, 3.87 GPA. Graduates December 2026.</p>
+<p><b>Looking for:</b> a full-time role in data analysis, data science or project management in tech or aerospace.</p>
+<p><b>Proof:</b> led a three-person team designing an offline learning system for the Tohono O'odham Nation; front-end developer intern at CT Group in Ho Chi Minh City; MIS 301 Python preceptor; developer and system architect of WIPAC, an AI tool that turns ideas into finished work.</p>
+<p><b>How he works:</b> observe first, act second. He listens, stays calm under pressure and keeps iterating until a problem is solved.</p>
+<p><b>Next step:</b> <a href="mailto:${EMAIL}">${EMAIL}</a> or <a href="${LINKEDIN}">LinkedIn</a>.</p>`,
+    roles: `<p>Victor is seeking a <b>full-time role in data analysis, data science or project management</b>, focused on <b>tech and aerospace</b> companies. He starts after graduating in December 2026.</p><p>His mix of MIS, OSCM and Computer Science lets him connect business problems with technical solutions.</p>`,
+    skills: `<p><b>Data &amp; analysis:</b> Python, SQL, Excel (MECC certified), data visualization, Microsoft Access.</p><p><b>Project management:</b> work breakdown, task delegation, milestone tracking, requirements, MVP definition, acceptance criteria, change control.</p><p><b>Systems &amp; tech:</b> data-flow diagrams, ER modeling, Git/GitHub, Next.js, React, FastAPI, Supabase, Java, JavaScript, HTML, CSS.</p><p><a href="#resume">See the full resume</a></p>`,
+    wipac: `<p><b>WIPAC</b> (pronounced "why-pack", formerly DocFlow) is Victor's AI-powered tool that turns ideas into finished work: "a common tool for every workspace."</p><p>As developer and system architect he designed a Next.js frontend, FastAPI (Python) backend and Supabase services, and runs development through milestones, written requirements and acceptance criteria. He is <b>looking for teammates</b>. <a href="#work">Read the STAR summary</a></p>`,
+    leadership: `<p>In MIS 441, Victor <b>led a three-person team</b> designing an offline-capable learning support system for the Tohono O'odham Nation. He defined the scope, assigned tasks, coordinated availability and adjusted schedules to hit course milestones.</p><p>He also leads WIPAC end to end, and supports students as an MIS 301 Python preceptor.</p>`,
+    experience: `<p><b>MIS 301 Python Programming Preceptor</b>, University of Arizona (Jan to May 2026): helped students debug, reviewed work against coding standards, worked with faculty.</p><p><b>Front End Developer Intern</b>, CT Group, Ho Chi Minh City (Jun to Aug 2024): built website features in HTML, CSS and JavaScript; organized and queried data with Excel and SQL.</p><p><a href="#resume">Full resume</a></p>`,
+    data: `<p>Recent data work includes a <b>business analytics portfolio</b> in Python and Google Colab: Cell2Cell telecom churn, Amazon review sentiment, and Alphabet quarterly earnings extracted from PDFs into structured data.</p><p>In the MIS 304 case competition he analyzed customer and order data for a marketplace serving 20 states in India. <a href="#work">See the samples</a></p>`,
+    education: `<p>University of Arizona, Eller College of Management: <b>Management Information Systems</b> and <b>Operations &amp; Supply Chain Management</b>, minor in <b>Computer Science</b>. GPA 3.87, Global Wildcat Scholarship. Expected graduation <b>December 2026</b>.</p>`,
+    style: `<p>Victor's rule is <b>observe first, act second</b>. He is a listener: he hears everyone's ideas, welcomes being told when he's wrong, and stays calm when plans change.</p><p>When a result isn't what he expected, he analyzes it, finds a new method and tries again. Words he'd use: <b>reliable, calm, creative, technical</b>. <a href="#evolution">Read his growth story</a></p>`,
+    availability: `<p>Victor graduates in <b>December 2026</b> and is available for a full-time role after that. For timing and details, email <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>`,
+    contact: `<p>Email: <b>${EMAIL}</b><br>LinkedIn: <a href="${LINKEDIN}">victor-danh-dam</a></p><p>He's happy to talk about data and project roles, or about joining WIPAC.</p>`,
+    interests: `<p>Outside of work Victor reads widely, especially <b>science fiction and fantasy</b>, follows astronomy and the stock market, and plays shooters, open-world RPGs and MMOs. Growing up he played chess and Chinese chess and trained in taekwondo, karate and aikido.</p>`,
+    video: `<p>Victor's 3-minute professional persona video covers how he thinks, WIPAC, and where his mindset comes from. <a href="#video">Watch it here</a></p>`,
+    direct: `<p>That's a question best answered by Victor directly. Email <a href="mailto:${EMAIL}">${EMAIL}</a> and he'll get back to you.</p>`,
+    fallback: `<p>I don't have a prepared answer for that one. Try one of the topics below, or email Victor at <a href="mailto:${EMAIL}">${EMAIL}</a>.</p>`
+  };
+  const RULES = [
+    ["summary",["summary","60","minute","overview","who is","about him","about victor","tldr","quick","brief","introduce"]],
+    ["direct",["visa","sponsor","authoriz","citizen","opt","salary","pay","relocat"]],
+    ["wipac",["wipac","docflow","why-pack","startup","side project","teammate","join"]],
+    ["leadership",["lead","leader","leadership","managed","team"]],
+    ["data",["data","analy","churn","case comp","portfolio","colab"]],
+    ["skills",["skill","stack","python","sql","excel","tool","code","coding","programming","technical","react","know"]],
+    ["experience",["experience","intern","ct group","preceptor","worked","job history","work history"]],
+    ["education",["school","degree","major","gpa","university","eller","study","studies","minor","oscm","mis"]],
+    ["availability",["available","availability","start","when can","graduat"]],
+    ["roles",["role","job","looking","position","seeking","goal","career","industry","aerospace","want"]],
+    ["style",["style","personality","communicat","strength","weakness","how does he","values","work with","like to work","describe"]],
+    ["contact",["contact","email","reach","linkedin","hire","interview","phone","connect"]],
+    ["interests",["hobby","hobbies","interest","fun","outside","read","book","game","chess"]],
+    ["video",["video","youtube","watch"]]
+  ];
+  const CHIPS = [["60-second summary","summary"],["Roles he wants","roles"],["Skills","skills"],["WIPAC","wipac"],["Leadership","leadership"],["How he works","style"],["Contact","contact"]];
+  const LABEL = {summary:"Give me the 60-second summary",roles:"What roles is he looking for?",skills:"What are his skills?",wipac:"Tell me about WIPAC",leadership:"What leadership experience does he have?",style:"How does he work?",contact:"How can I contact him?"};
+
+  const fab=document.getElementById("askFab"), panel=document.getElementById("askPanel"),
+        log=document.getElementById("askLog"), chips=document.getElementById("askChips"),
+        form=document.getElementById("askForm"), input=document.getElementById("askInput");
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let greeted=false;
+
+  function add(html, who){
+    const d=document.createElement("div"); d.className="msg "+who;
+    if(who==="me") d.textContent=html; else d.innerHTML=html;
+    log.appendChild(d); log.scrollTop=log.scrollHeight; return d;
+  }
+  function match(q){
+    q=q.toLowerCase(); let best=null, score=0;
+    for(const [k,words] of RULES){
+      const sc=words.reduce((n,w)=>n+(new RegExp("\\b"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).test(q)?1:0),0);
+      if(sc>score){score=sc;best=k;}
+    }
+    return best||"fallback";
+  }
+  function reply(key){
+    const t=add("Typing…","bot typing");
+    setTimeout(()=>{ t.className="msg bot"; t.innerHTML=A[key]; log.scrollTop=Math.max(0,t.offsetTop-log.offsetTop-56); }, reduce?0:450);
+  }
+  function ask(text,key){ add(text,"me"); reply(key||match(text)); }
+  function open(){
+    panel.classList.add("open"); fab.setAttribute("aria-expanded","true");
+    if(!greeted){ greeted=true; add("<p>Hi! I can answer common questions about Victor's experience, skills and goals. Pick a topic or type a question.</p>","bot"); }
+    setTimeout(()=>input.focus(),50);
+  }
+  function close(){ panel.classList.remove("open"); fab.setAttribute("aria-expanded","false"); fab.focus(); }
+
+  CHIPS.forEach(([label,key])=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=label;
+    b.addEventListener("click",()=>ask(LABEL[key],key)); chips.appendChild(b);
+  });
+  fab.addEventListener("click",open);
+  document.getElementById("askClose").addEventListener("click",close);
+  panel.addEventListener("keydown",e=>{ if(e.key==="Escape") close(); });
+  form.addEventListener("submit",e=>{ e.preventDefault(); const q=input.value.trim(); if(!q) return; input.value=""; ask(q); });
+  log.addEventListener("click",e=>{ const a=e.target.closest('a[href^="#"]'); if(a && window.innerWidth<=520) close(); });
+  document.querySelectorAll("[data-open-summary]").forEach(b=>b.addEventListener("click",()=>{ open(); ask(LABEL.summary,"summary"); }));
+})();
 </script>
 </body>
 </html>
