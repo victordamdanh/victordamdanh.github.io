@@ -110,6 +110,8 @@ section.block{padding:72px 0;border-top:1px solid var(--line)}
 .videoband .two{align-items:start}
 .screen{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:color-mix(in srgb,var(--board-ink) 10%,var(--board));border:1px solid color-mix(in srgb,var(--board-ink) 25%,transparent);display:grid;place-items:center;text-decoration:none;color:var(--board-ink)}
 .screen .inner{display:grid;justify-items:center;gap:10px;text-align:center;padding:20px}
+.screen.embed{display:block}
+.screen.embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .mono-badge{width:76px;height:76px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--display);font-size:2rem}
 .play{width:64px;height:64px;border-radius:50%;background:var(--board-ink);color:var(--board);display:grid;place-items:center;font-size:1.4rem}
 .pill{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:3px 10px}
@@ -509,7 +511,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 <script>
 /* ===== Edit these links when they are ready ===== */
 const CONFIG = {
-  videoUrl: "",            // YouTube or Vimeo link to your persona video
+  videoUrl: "https://youtu.be/g-_CJW0g2yQ",   // YouTube link to your persona video
   resumeUrl: "",           // Shareable link to your resume PDF (for example Google Drive)
   samples: {
     mis441: "",            // MIS 441 offline learning system design documents
@@ -539,14 +541,27 @@ const CONFIG = {
 /* Video */
 (function(){
   if(!CONFIG.videoUrl) return;
+  const m = CONFIG.videoUrl.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);
+  const id = m ? m[1] : null;
   const a = document.getElementById("videoLink");
-  a.href = CONFIG.videoUrl;
-  a.setAttribute("aria-label","Watch Victor Dam's professional persona video");
-  document.getElementById("videoInner").innerHTML =
-    '<div class="play" aria-hidden="true">&#9654;</div>' +
-    '<p style="font-family:var(--display);font-size:1.6rem">Watch the video</p>' +
-    '<span class="pill">2:58</span>';
-  document.getElementById("videoNote").textContent = "Opens in a new tab.";
+  const note = document.getElementById("videoNote");
+  const watch = "https://www.youtube.com/watch?v=" + id;
+  const canEmbed = id && !/claude\.(ai|site|com)|claudeusercontent/.test(location.hostname);
+  if(canEmbed){
+    const box = document.createElement("div");
+    box.className = "screen embed";
+    box.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?rel=0" title="Victor Dam professional persona video" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+    a.replaceWith(box);
+    note.innerHTML = 'Prefer YouTube? <a href="' + watch + '" style="color:inherit">Watch it there</a>.';
+  } else {
+    a.href = watch;
+    a.setAttribute("aria-label","Watch Victor Dam's professional persona video on YouTube");
+    document.getElementById("videoInner").innerHTML =
+      '<div class="play" aria-hidden="true">&#9654;</div>' +
+      '<p style="font-family:var(--display);font-size:1.6rem">Watch the video</p>' +
+      '<span class="pill">YouTube</span>';
+    note.textContent = "Opens on YouTube.";
+  }
 })();
 
 /* Resume PDF */
