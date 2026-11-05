@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Victor Dam</title>
+<meta name="description" content="Victor Dam: MIS and OSCM student at the University of Arizona Eller College of Management, seeking data analysis, data science and project management roles in tech and aerospace.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a calm, left-aligned editorial page. One bold element: the chessboard in the hero,
+   tracing Victor's "observe first, act second" method as a knight's path. Growth story = a game record. */
+:root{
+  --paper:#F1F3EF;
+  --surface:#FFFFFF;
+  --ink:#14201B;
+  --muted:#56635D;
+  --line:#D6DBD3;
+  --board:#2D5A4C;
+  --board-ink:#F1F3EF;
+  --brass:#9C7A35;
+  --sq-light:#E4E8E1;
+  --sq-dark:#B9C6BE;
+  --display:"Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --body:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1412; --surface:#151E1B; --ink:#E6EAE5; --muted:#9BA7A0; --line:#28342F;
+    --board:#7DB4A1; --board-ink:#0E1412; --brass:#D4B06A; --sq-light:#1E2925; --sq-dark:#2F3F39;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1412; --surface:#151E1B; --ink:#E6EAE5; --muted:#9BA7A0; --line:#28342F;
+  --board:#7DB4A1; --board-ink:#0E1412; --brass:#D4B06A; --sq-light:#1E2925; --sq-dark:#2F3F39;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;line-height:1.1}
+h2{font-size:clamp(2rem,4.2vw,2.9rem)}
+h3{font-size:1.55rem}
+p{margin:0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--brass)}
+.muted{color:var(--muted)}
+.prose{max-width:62ch;display:grid;gap:1em}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.brand{font-family:var(--display);font-size:1.45rem;text-decoration:none}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;gap:22px;font-size:.92rem}
+.nav ul a{text-decoration:none;color:var(--muted)}
+.nav ul a:hover{color:var(--ink)}
+@media (max-width:760px){.nav ul{display:none}}
+
+/* Hero */
+.hero{padding:64px 0 56px}
+.hero .wrap{display:grid;grid-template-columns:1.25fr .85fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(3.6rem,9vw,6.4rem);letter-spacing:-.01em}
+.thesis{font-family:var(--display);font-style:italic;font-size:clamp(1.5rem,3vw,2.1rem);color:var(--board);margin-top:6px}
+.lede{margin-top:22px;max-width:56ch;font-size:1.1rem}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;padding:0;list-style:none}
+.facts li{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--surface);padding:5px 10px;border-radius:999px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:500 .95rem var(--body);padding:11px 18px;border-radius:8px;text-decoration:none;border:1px solid var(--ink);cursor:pointer;background:transparent;color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn:hover{transform:translateY(-1px)}
+.btn[aria-disabled="true"]{opacity:.55;pointer-events:none;border-style:dashed}
+
+.boardbox{justify-self:end;width:100%;max-width:360px}
+.board{position:relative;display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;border:1px solid var(--line);border-radius:6px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(0,0,0,.35)}
+.sq{position:relative;background:var(--sq-light)}
+.sq.d{background:var(--sq-dark)}
+.sq.step{background:var(--board)}
+.sq.step span{position:absolute;inset:0;display:grid;place-items:center;font:500 .8rem var(--mono);color:var(--board-ink)}
+.board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.board path{fill:none;stroke:var(--brass);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:0}
+.board.anim path{animation:trace 2.4s .4s ease-in-out both}
+@keyframes trace{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){.board.anim path{animation:none}}
+.legend{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-family:var(--mono);font-size:.72rem;color:var(--muted);text-align:center}
+.legend b{display:block;color:var(--board);font-weight:500}
+.boardcap{margin-top:10px;font-size:.85rem;color:var(--muted);text-align:center}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr;gap:40px}.boardbox{justify-self:start}}
+
+/* Sections */
+section.block{padding:72px 0;border-top:1px solid var(--line)}
+.head{display:grid;gap:10px;margin-bottom:36px;align-content:start}
+.words{align-items:flex-start}
+.two{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px}
+@media (max-width:860px){.two{grid-template-columns:1fr;gap:28px}}
+.words{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.words span{font-family:var(--display);font-size:1.5rem;padding:2px 14px;border-left:2px solid var(--brass)}
+.aside{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;display:grid;gap:8px}
+
+/* Video */
+.videoband{background:var(--board);color:var(--board-ink)}
+.videoband .eyebrow{color:var(--board-ink);opacity:.8}
+.videoband .two{align-items:start}
+.screen{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:color-mix(in srgb,var(--board-ink) 10%,var(--board));border:1px solid color-mix(in srgb,var(--board-ink) 25%,transparent);display:grid;place-items:center;text-decoration:none;color:var(--board-ink)}
+.screen .inner{display:grid;justify-items:center;gap:10px;text-align:center;padding:20px}
+.mono-badge{width:76px;height:76px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--display);font-size:2rem}
+.play{width:64px;height:64px;border-radius:50%;background:var(--board-ink);color:var(--board);display:grid;place-items:center;font-size:1.4rem}
+.pill{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:3px 10px}
+.chapters{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:0}
+.chapters li{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:9px 0;border-top:1px solid color-mix(in srgb,var(--board-ink) 22%,transparent);font-size:.95rem}
+.chapters time{font-family:var(--mono);font-variant-numeric:tabular-nums;opacity:.8}
+.videoband .prose p{color:var(--board-ink)}
+
+/* Evolution */
+.vp{font-family:var(--display);font-size:clamp(1.5rem,2.8vw,2rem);line-height:1.3;max-width:34ch;margin-bottom:44px}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media (max-width:860px){.cols{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:24px;display:grid;gap:12px;align-content:start}
+.values{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.values b{display:block;font-weight:600}
+.values span,.card p{color:var(--muted);font-size:.95rem}
+.record{margin-top:56px}
+.record ol{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:0;border-left:2px solid var(--line)}
+.record li{display:grid;grid-template-columns:150px 1fr;gap:24px;padding:16px 0 16px 24px;position:relative}
+.record li::before{content:"";position:absolute;left:-7px;top:24px;width:12px;height:12px;border-radius:2px;background:var(--sq-dark);border:1px solid var(--line)}
+.record li.now::before{background:var(--board)}
+.record li.next::before{background:var(--paper);border:2px dashed var(--brass)}
+.record .when{font-family:var(--mono);font-size:.8rem;color:var(--muted);padding-top:4px}
+.record .when b{display:block;color:var(--brass);font-weight:500}
+.record h3{font-size:1.35rem;margin-bottom:4px}
+.record p{color:var(--muted);max-width:62ch}
+@media (max-width:600px){.record li{grid-template-columns:1fr;gap:4px}}
+.story{margin-top:56px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:32px}
+.story .glyph{font-size:3.4rem;line-height:1;color:var(--board)}
+@media (max-width:600px){.story{grid-template-columns:1fr}}
+
+/* Work samples */
+.samples{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media (max-width:860px){.samples{grid-template-columns:1fr}}
+.sample{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px;display:grid;gap:14px;grid-template-rows:auto auto 1fr auto}
+.tag{font-family:var(--mono);font-size:.74rem;color:var(--brass)}
+.star{display:grid;gap:10px;margin:0}
+.star div{display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:.94rem}
+.star dt{font-family:var(--mono);font-weight:500;color:var(--board);width:24px;height:24px;border:1px solid var(--line);border-radius:4px;display:grid;place-items:center;font-size:.78rem}
+.star dd{margin:0;color:var(--muted)}
+.star dd b{color:var(--ink);font-weight:500}
+.link{font-weight:500;color:var(--board);text-decoration:none;border-bottom:1px solid currentColor;justify-self:start}
+.link.soon{color:var(--muted);border-bottom-style:dashed;pointer-events:none}
+
+/* Resume */
+.resume{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:40px;display:grid;gap:30px}
+@media (max-width:600px){.resume{padding:24px}}
+.rhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:20px}
+.rsec h3{font-family:var(--mono);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--brass);margin-bottom:12px}
+.ritem{display:grid;grid-template-columns:1fr auto;gap:2px 16px;margin-bottom:16px}
+.ritem .t{font-weight:600}
+.ritem .d{font-family:var(--mono);font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.ritem .s{color:var(--muted);font-size:.94rem}
+.ritem ul{grid-column:1/-1;margin:6px 0 0;padding-left:18px;font-size:.94rem;display:grid;gap:3px}
+.skills{display:grid;grid-template-columns:170px 1fr;gap:8px 20px;font-size:.94rem}
+.skills dt{font-weight:600}
+.skills dd{margin:0;color:var(--muted)}
+@media (max-width:600px){.skills{grid-template-columns:1fr;gap:2px}.skills dd{margin-bottom:8px}}
+
+/* Contact */
+.contact .two{align-items:center}
+.cardlinks{display:grid;gap:12px}
+.cline{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.cline .k{font-family:var(--mono);font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.cline .v{font-weight:500;word-break:break-all}
+.mini{font:500 .85rem var(--body);background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;text-decoration:none}
+.mini:hover{border-color:var(--ink)}
+footer{padding:32px 0 48px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top">Victor Dam</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#video">Video</a></li>
+      <li><a href="#evolution">Evolution</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">University of Arizona · Eller College of Management</p>
+      <h1>Victor Dam</h1>
+      <p class="thesis">Observe first. Act second.</p>
+      <p class="lede">I connect business problems with technical solutions. I'm studying Management Information Systems and Operations &amp; Supply Chain Management with a minor in Computer Science, and I'm seeking a full-time role in <strong>data analysis, data science or project management</strong> in <strong>tech and aerospace</strong>.</p>
+      <ul class="facts">
+        <li>Graduating Dec 2026</li>
+        <li>MIS + OSCM</li>
+        <li>Minor: Computer Science</li>
+        <li>GPA 3.68</li>
+        <li>Developer &amp; architect of WIPAC</li>
+      </ul>
+      <div class="ctas">
+        <a class="btn primary" href="#video">Watch my 3-minute video</a>
+        <a class="btn" href="#resume">Read my resume</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <figure class="boardbox" aria-label="Chessboard showing a knight's path of five numbered moves, representing how Victor works: observe, listen, analyze, decide, act.">
+      <div class="board anim" id="board"></div>
+      <ol class="legend">
+        <li><b>1</b>Observe</li><li><b>2</b>Listen</li><li><b>3</b>Analyze</li><li><b>4</b>Decide</li><li><b>5</b>Act</li>
+      </ol>
+      <figcaption class="boardcap">How I work, one knight's move at a time.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main>
+
+<section class="block" id="about">
+  <div class="wrap two">
+    <div class="head">
+      <p class="eyebrow">About me</p>
+      <h2>A strategist's patience and a builder's persistence.</h2>
+      <div class="words" aria-label="Four words that describe me">
+        <span>Reliable</span><span>Calm</span><span>Creative</span><span>Technical</span>
+      </div>
+    </div>
+    <div class="prose">
+      <p>I am a student at the University of Arizona's Eller College of Management, majoring in Management Information Systems and Operations &amp; Supply Chain Management with a minor in Computer Science. I graduate in December 2026 and am pursuing a full-time role in data analysis, data science or project management with a tech or aerospace company.</p>
+      <p>My studies and projects let me work on both sides of a problem. I have led a three-person team designing an offline learning system, built web features as a front-end developer intern at CT Group in Ho Chi Minh City, and analyzed customer and financial data in Python. Today I am the developer and system architect of <strong>WIPAC</strong> (formerly DocFlow), an AI-powered tool that turns ideas into finished work.</p>
+      <p>I work by observing first and acting second. I listen to every idea before deciding, welcome people telling me when I'm wrong, and stay calm when plans change. When a result isn't what I expected, I analyze it and try a better approach. Teams can count on me to finish what I commit to.</p>
+      <div class="aside">
+        <p class="eyebrow">Outside of work</p>
+        <p class="muted">I read widely, especially science fiction and fantasy, because I love seeing how creative people imagine the world. I follow astronomy and the stock market, and I play shooters, open-world RPGs and MMOs, where quick decisions and teamwork matter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block videoband" id="video">
+  <div class="wrap two">
+    <div class="head">
+      <p class="eyebrow">Professional persona video · 2:58</p>
+      <h2>Meet me in three minutes.</h2>
+      <div class="prose">
+        <p>See how I approach problems, how I'm architecting WIPAC from the big picture down to each feature, and the experiences, from the chessboard to the World Scholar's Cup at Yale, that shaped the way I think. If you're hiring for a data or project role, this is the fastest way to know whether I'd fit your team.</p>
+      </div>
+      <ol class="chapters" aria-label="Video chapters">
+        <li><time>0:00</time><span>Opening: how I think</span></li>
+        <li><time>0:15</time><span>Who I am: MIS, OSCM and Computer Science</span></li>
+        <li><time>0:40</time><span>How I work: listening, staying calm, trying again</span></li>
+        <li><time>1:20</time><span>WIPAC: building as developer and system architect</span></li>
+        <li><time>1:57</time><span>Where my thinking comes from</span></li>
+        <li><time>2:22</time><span>Outside of work</span></li>
+        <li><time>2:38</time><span>Let's connect</span></li>
+      </ol>
+    </div>
+    <div>
+      <a class="screen" id="videoLink" href="#video" aria-label="Professional persona video">
+        <div class="inner" id="videoInner">
+          <div class="mono-badge" aria-hidden="true">VD</div>
+          <p style="font-family:var(--display);font-size:1.6rem">Victor Dam · Professional Persona</p>
+          <span class="pill">Video coming soon</span>
+        </div>
+      </a>
+      <p style="margin-top:12px;font-size:.88rem;opacity:.85" id="videoNote">The full video is being finalized and will be posted here shortly.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="evolution">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Evolution</p>
+      <h2>My growth story</h2>
+    </div>
+    <p class="vp">I believe logic and hard work move people toward their goals. I study the situation before I act, take risks when the benefit is clear, and keep refining a solution until it works.</p>
+
+    <div class="cols">
+      <article class="card">
+        <p class="eyebrow">Core values</p>
+        <ul class="values">
+          <li><b>Logic</b><span>I trust evidence and reasoning, and I test a move before I make it.</span></li>
+          <li><b>Hard work</b><span>Consistent effort achieves real goals. Competitions proved that to me early.</span></li>
+          <li><b>Observe first, act second</b><span>A personal rule: understand the situation fully, then act.</span></li>
+          <li><b>Calculated risk</b><span>I accept some risk when the potential benefit justifies it.</span></li>
+          <li><b>Curiosity about people</b><span>I value people's stories and creative ideas, on teams and in books.</span></li>
+        </ul>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Communication style</p>
+        <h3>Listener and observer</h3>
+        <p>I'm usually not the loudest person in the room. I hear everyone's ideas first, read the people around me, and stay calm when problems come up. When the work calls for it, I speak with anyone, from classmates to industry professionals.</p>
+        <p><strong style="color:var(--ink)">In practice:</strong> as an MIS 301 Python preceptor I help students debug and work with faculty on their learning needs, and as MIS 441 team leader I assign tasks and adjust schedules around each teammate's availability.</p>
+      </article>
+      <article class="card">
+        <p class="eyebrow">Where I'm growing</p>
+        <h3>Sharing my thinking sooner</h3>
+        <p>Because I listen more than I talk, people who don't know me yet can read my quiet focus as distance. I'm learning to explain my reasoning earlier and more openly, so teammates see the analysis behind my decisions.</p>
+        <p>Leading WIPAC and inviting new teammates to build it with me is how I practice this every week.</p>
+      </article>
+    </div>
+
+    <div class="record">
+      <p class="eyebrow">The game so far</p>
+      <ol>
+        <li><div class="when"><b>Move 1</b>Childhood</div><div><h3>The board</h3><p>Chess and Chinese chess taught me to think several moves ahead and to respect the cost of a rushed decision.</p></div></li>
+        <li><div class="when"><b>Move 2</b>Childhood</div><div><h3>The discipline</h3><p>Taekwondo, karate and aikido built the patience and self-discipline I still rely on under pressure.</p></div></li>
+        <li><div class="when"><b>Move 3</b>High school</div><div><h3>The challenge</h3><p>Math olympiads, science innovation contests, the science research club and the World Scholar's Cup at Yale showed me that hard work and logic take you far, and that some risks are worth taking.</p></div></li>
+        <li><div class="when"><b>Move 4</b>Summer 2024</div><div><h3>The first professional move</h3><p>As a front-end developer intern at CT Group in Ho Chi Minh City, I built website features in HTML, CSS and JavaScript and organized data with Excel and SQL.</p></div></li>
+        <li><div class="when"><b>Move 5</b>2025</div><div><h3>Building on my own</h3><p>I built a task-monitoring platform that helps managers track progress and workload, and a Python assistant that automates messaging and email. I also turned marketplace data into recommendations in a case competition.</p></div></li>
+        <li><div class="when"><b>Move 6</b>2026</div><div><h3>Leading others</h3><p>I led a three-person team designing an offline learning system for the Tohono O'odham Nation and became an MIS 301 Python preceptor, my first roles responsible for other people's progress.</p></div></li>
+        <li class="now"><div class="when"><b>Move 7</b>Now</div><div><h3>The build</h3><p>As developer and system architect of WIPAC, I plan the whole system first, then build, test and fix one feature at a time against written requirements.</p></div></li>
+        <li class="next"><div class="when"><b>Next move</b>Dec 2026</div><div><h3>Your team</h3><p>A full-time role in data analysis, data science or project management, helping a tech or aerospace team make better decisions with data.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="story">
+      <div class="glyph" aria-hidden="true">♞</div>
+      <div class="prose">
+        <p class="eyebrow">Why the chessboard</p>
+        <h3>Every lost position teaches the next move.</h3>
+        <p>On a chessboard, a rushed move is usually the losing one. I learned that before I wrote my first line of code, and it still shapes how I work. When I design a system and the result isn't what I expected, I treat it like a lost position: I study what went wrong, find a new line and play again.</p>
+        <p>Even when a problem seems impossible or the budget is tight, I look for a smarter path before I consider giving up. The knight is my symbol because it never moves in a straight line, yet it can reach every square on the board.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="work">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Work samples</p>
+      <h2>Projects I'm proud of</h2>
+      <p class="muted" style="max-width:60ch">Each sample is summarized in STAR format: the Situation, my Task, the Actions I took and the Result.</p>
+    </div>
+    <div class="samples">
+      <article class="sample">
+        <p class="tag">Independent project · Developer &amp; system architect · 2026 – present</p>
+        <h3>WIPAC (formerly DocFlow): an AI tool that turns ideas into finished work</h3>
+        <dl class="star">
+          <div><dt>S</dt><dd>Turning a rough idea into a finished, well-formatted document takes teams hours of setup, rework and lost formatting.</dd></div>
+          <div><dt>T</dt><dd>Design and lead <b>a common tool for every workspace</b>: reliable editing, accurate previews, access controls and export.</dd></div>
+          <div><dt>A</dt><dd>Architected a <b>Next.js (React)</b> frontend, <b>FastAPI (Python)</b> backend and <b>Supabase</b> services with an AI layer. Directed AI-assisted development through milestones, written requirements and acceptance criteria, with Git checkpoints and change requests.</dd></div>
+          <div><dt>R</dt><dd>Document editing, previews, presets and export history in active development, reviewed with automated checks and real document rendering. Now <b>recruiting teammates</b>.</dd></div>
+        </dl>
+        <a class="link" href="#contact">Ask me about joining WIPAC</a>
+      </article>
+
+      <article class="sample">
+        <p class="tag">MIS 441 · Team leader &amp; system designer · 2026</p>
+        <h3>Offline learning support system for the Tohono O'odham Nation</h3>
+        <dl class="star">
+          <div><dt>S</dt><dd>Students with <b>limited connectivity and shared devices</b> still need access to courses, assignments and messaging, with their data kept private.</dd></div>
+          <div><dt>T</dt><dd>Lead a three-person team to design an offline-capable learning support system that meets course milestones.</dd></div>
+          <div><dt>A</dt><dd>Defined scope, assigned tasks and adjusted schedules around team availability. Built <b>Level-0 and Level-1 data-flow diagrams</b> and an <b>ER model</b> covering authentication, courses, assignments, messaging and offline sync.</dd></div>
+          <div><dt>R</dt><dd>A complete system design whose processes and data requirements fit the community's connectivity, device and privacy constraints.</dd></div>
+        </dl>
+        <a class="link soon" data-sample="mis441" href="#work">Design documents: link coming soon</a>
+      </article>
+
+      <article class="sample">
+        <p class="tag">Business analytics portfolio · Python &amp; Google Colab · 2026</p>
+        <h3>Churn, sentiment and earnings: three data stories</h3>
+        <dl class="star">
+          <div><dt>S</dt><dd>Businesses sit on customer and financial data that is hard to compare or act on in its raw form.</dd></div>
+          <div><dt>T</dt><dd>Turn three messy datasets into clear, decision-ready insight.</dd></div>
+          <div><dt>A</dt><dd>Charted <b>Cell2Cell telecom churn</b> against usage, tenure and service; organized <b>Amazon review</b> sentiment with prompt-based extraction; built a workflow pulling <b>Alphabet</b> quarterly results from PDFs into structured data.</dd></div>
+          <div><dt>R</dt><dd>Comparable charts and tables that show what drives churn, what customers complain about, and how earnings change quarter to quarter.</dd></div>
+        </dl>
+        <a class="link soon" data-sample="analytics" href="#work">Colab notebooks: link coming soon</a>
+      </article>
+
+      <article class="sample">
+        <p class="tag">MIS 304 case competition · Team of 5 · Fall 2025</p>
+        <h3>Marketplace data analysis: boosting order ratings</h3>
+        <dl class="star">
+          <div><dt>S</dt><dd>A consumer-to-consumer marketplace selling household goods to customers in <b>20 states across India</b> had a poor retention rate.</dd></div>
+          <div><dt>T</dt><dd>Analyze customer, order and shipping data and recommend how to raise order ratings.</dd></div>
+          <div><dt>A</dt><dd>I owned the <b>customer and order insights</b>: amount spent per state, and how product photos relate to orders and ratings.</dd></div>
+          <div><dt>R</dt><dd>Our team presented a data-backed recommendation to <b>incentivize sellers</b> to improve ratings and retention.</dd></div>
+        </dl>
+        <a class="link soon" data-sample="caseComp" href="#work">Presentation deck: link coming soon</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="resume">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Resume</p>
+      <h2>Experience at a glance</h2>
+    </div>
+    <div class="resume">
+      <div class="rhead">
+        <div>
+          <h3 style="font-size:2rem">Victor Dam</h3>
+          <p class="muted">Data analysis · Data science · Project management</p>
+        </div>
+        <a class="btn" id="resumeBtn" href="#resume" aria-disabled="true">PDF version coming soon</a>
+      </div>
+
+      <div class="rsec">
+        <h3>Education</h3>
+        <div class="ritem">
+          <span class="t">University of Arizona, Eller College of Management</span><span class="d">Tucson, AZ</span>
+          <span class="s">Management Information Systems · Operations &amp; Supply Chain Management · Minor in Computer Science</span><span class="d">Expected Dec 2026</span>
+          <ul><li>GPA: 3.68 · Global Wildcat Scholarship</li></ul>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <h3>Project leadership &amp; systems design</h3>
+        <div class="ritem">
+          <span class="t">WIPAC (formerly DocFlow) · Independent Project Lead &amp; Developer</span><span class="d">2026 – Present</span>
+          <ul><li>Direct AI-assisted development through milestones, written requirements, acceptance criteria and explicit scope boundaries</li><li>Coordinate a Next.js frontend, FastAPI backend and Supabase services, with handoff notes, change requests and Git checkpoints</li></ul>
+        </div>
+        <div class="ritem">
+          <span class="t">MIS 441 Offline Learning Support System · Team Leader &amp; System Designer</span><span class="d">2026</span>
+          <ul><li>Led a three-person team designing an offline-capable system for the Tohono O'odham Nation; defined scope, assigned tasks and coordinated schedules</li><li>Developed Level-0/Level-1 DFDs and an ER model aligned with limited connectivity, shared devices and privacy needs</li></ul>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <h3>Professional &amp; teaching experience</h3>
+        <div class="ritem">
+          <span class="t">University of Arizona · MIS 301 Python Programming Preceptor</span><span class="d">Jan – May 2026</span>
+          <ul><li>Supported students with Python, assignment requirements and debugging during office hours</li><li>Reviewed work against course and coding standards and collaborated with faculty on learning needs</li></ul>
+        </div>
+        <div class="ritem">
+          <span class="t">CT Group · Front End Developer Intern</span><span class="d">Jun – Aug 2024</span>
+          <span class="s">Ho Chi Minh City, Vietnam</span><span></span>
+          <ul><li>Developed website features with HTML, CSS and JavaScript; organized and queried data with Excel and SQL</li><li>Collaborated on shared development tasks and deployed code to the company's local environment</li></ul>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <h3>Additional projects</h3>
+        <div class="ritem">
+          <span class="t">Manager Task Monitoring &amp; Performance Evaluation System · Developer</span><span class="d">Jun 2025</span>
+          <ul><li>Built a web platform with database-driven dashboards for deadlines, project status and workload distribution</li></ul>
+        </div>
+        <div class="ritem">
+          <span class="t">AI Automation Assistant · Developer</span><span class="d">Jun 2025</span>
+          <ul><li>Built a Python chatbot that connects user requests to messaging and email actions across applications</li></ul>
+        </div>
+      </div>
+
+      <div class="rsec">
+        <h3>Skills</h3>
+        <dl class="skills">
+          <dt>Project management</dt><dd>Work breakdown, task delegation, milestone tracking, requirements, MVP definition, acceptance criteria, change control, risk identification</dd>
+          <dt>Systems analysis</dt><dd>Business-process mapping, Level-0/Level-1 data-flow diagrams, entity-relationship modeling, database design</dd>
+          <dt>Data &amp; analysis</dt><dd>Python, SQL, Excel (MECC certified), data visualization, Microsoft Access</dd>
+          <dt>Technical tools</dt><dd>Git, GitHub, Next.js, React, FastAPI, Supabase, Java, JavaScript, HTML, CSS</dd>
+          <dt>Languages</dt><dd>English and Vietnamese (fluent)</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block contact" id="contact">
+  <div class="wrap two">
+    <div class="head">
+      <p class="eyebrow">Contact</p>
+      <h2>Let's talk about your team, or mine.</h2>
+      <p class="muted" style="max-width:52ch">If you're hiring for data analysis, data science or project management in tech or aerospace, I'd welcome a conversation. And if you'd like to help build WIPAC, I'm looking for teammates.</p>
+    </div>
+    <div class="cardlinks">
+      <div class="cline">
+        <div><p class="k">Email</p><p class="v" id="emailText">vich5847@gmail.com</p></div>
+        <div style="display:flex;gap:8px">
+          <button class="mini" id="copyEmail" type="button">Copy email</button>
+          <a class="mini" id="mailLink" href="mailto:vich5847@gmail.com">Write to me</a>
+        </div>
+      </div>
+      <div class="cline">
+        <div><p class="k">LinkedIn</p><p class="v">linkedin.com/in/victor-danh-dam-a995b7292</p></div>
+        <a class="mini" href="https://www.linkedin.com/in/victor-danh-dam-a995b7292">Connect on LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Victor Dam · University of Arizona, Eller College of Management</span>
+    <span>Observe first. Act second.</span>
+  </div>
+</footer>
+
+<script>
+/* ===== Edit these links when they are ready ===== */
+const CONFIG = {
+  videoUrl: "",            // YouTube or Vimeo link to your persona video
+  resumeUrl: "",           // Shareable link to your resume PDF (for example Google Drive)
+  samples: {
+    mis441: "",            // MIS 441 offline learning system design documents
+    analytics: "",         // Business analytics notebooks (Cell2Cell, Amazon, Alphabet)
+    caseComp: ""           // MIS 304 case competition deck
+  }
+};
+
+/* Chessboard with a knight's path: b1, c3, e4, f6, g8 */
+(function(){
+  const board = document.getElementById("board");
+  const path = [[1,7],[2,5],[4,4],[5,2],[6,0]]; // [col,row] from top-left
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
+      const sq = document.createElement("div");
+      sq.className = "sq" + ((r+c)%2 ? " d" : "");
+      const i = path.findIndex(p => p[0]===c && p[1]===r);
+      if(i>-1){ sq.classList.add("step"); sq.innerHTML = "<span>"+(i+1)+"</span>"; }
+      board.appendChild(sq);
+    }
+  }
+  const pts = path.map(p => (p[0]+.5)*10+","+(p[1]+.5)*10).join(" L");
+  board.insertAdjacentHTML("beforeend",
+    '<svg viewBox="0 0 80 80" aria-hidden="true"><path pathLength="60" d="M'+pts+'"/></svg>');
+})();
+
+/* Video */
+(function(){
+  if(!CONFIG.videoUrl) return;
+  const a = document.getElementById("videoLink");
+  a.href = CONFIG.videoUrl;
+  a.setAttribute("aria-label","Watch Victor Dam's professional persona video");
+  document.getElementById("videoInner").innerHTML =
+    '<div class="play" aria-hidden="true">&#9654;</div>' +
+    '<p style="font-family:var(--display);font-size:1.6rem">Watch the video</p>' +
+    '<span class="pill">2:58</span>';
+  document.getElementById("videoNote").textContent = "Opens in a new tab.";
+})();
+
+/* Resume PDF */
+(function(){
+  if(!CONFIG.resumeUrl) return;
+  const b = document.getElementById("resumeBtn");
+  b.href = CONFIG.resumeUrl; b.removeAttribute("aria-disabled");
+  b.textContent = "Open resume (PDF)";
+})();
+
+/* Work sample links */
+document.querySelectorAll("[data-sample]").forEach(el => {
+  const url = CONFIG.samples[el.dataset.sample];
+  if(!url) return;
+  el.href = url; el.classList.remove("soon");
+  el.textContent = el.textContent.replace(": link coming soon", "") + " →";
+});
+
+/* Copy email */
+document.getElementById("copyEmail").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
+  try{
+    await navigator.clipboard.writeText(document.getElementById("emailText").textContent);
+    btn.textContent = "Copied";
+  }catch(err){
+    btn.textContent = "Select the address to copy";
+  }
+  setTimeout(() => { btn.textContent = "Copy email"; }, 2200);
+});
+</script>
+</body>
+</html>
